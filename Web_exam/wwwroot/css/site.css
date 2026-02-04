@@ -1,0 +1,125 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+.nonogram-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.nonogram-top {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.col-hints-grid {
+    display: flex;
+    gap: 2px;
+}
+
+.col-hint-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.nonogram-middle {
+    display: flex;
+    gap: 4px;
+}
+
+.row-hints-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.row-hint-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 2px;
+}
+
+.hint-cell,
+.cell {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    text-align: center;
+    line-height: 24px; 
+}
+
+.hint-cell.empty {
+    border: 1px solid transparent;
+}
+
+.nonogram-grid {
+    display: grid;
+    gap: 2px;
+}
+
+.cell {
+    background-color: #f8f8f8;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.black {
+    background-color: black;
+    border: 1px solid #BDBDBD;
+}
+
+.cross {
+    background-image: url("../images/close.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.cell.error-blink {
+    animation: error-blink 0.3s ease-in-out 2; 
+}
+
+@keyframes error-blink {
+    0%, 100% {
+        background-color: #f8f8f8;
+    }
+
+    50% {
+        background-color: #ff5c5c; 
+    }
+}
+
+

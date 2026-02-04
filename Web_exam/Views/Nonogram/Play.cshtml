@@ -1,0 +1,67 @@
+﻿@model Nonogram
+
+@{
+    var cellSize = 24;
+    var gap = 2;
+    var rowHintWidth = Model.MaxRowHintsCount * cellSize + (Model.MaxRowHintsCount - 1) * gap;
+    var colHintHeight = Model.MaxColHintsCount * cellSize + (Model.MaxColHintsCount - 1) * gap;
+}
+
+<div class="nonogram-wrapper">
+    <div class="nonogram-top d-flex">
+        <div class="nonogram-corner" style="width:@(rowHintWidth)px; height:@(colHintHeight)px;"></div>
+
+        <div class="col-hints-grid d-flex">
+            @for (int col = 0; col < Model.ColHints.Count; col++)
+            {
+                <div class="col-hint-column d-flex flex-column justify-content-end">
+                    @for (int e = 0; e < Model.MaxColHintsCount - Model.ColHints[col].Count; e++)
+                    {
+                        <div class="hint-cell empty"></div>
+                    }
+
+                    @for (int j = 0; j < Model.ColHints[col].Count; j++)
+                    {
+                        <div class="hint-cell">
+                            @Model.ColHints[col][j]
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="nonogram-middle d-flex">
+        <div class="row-hints-grid d-flex flex-column">
+            @for (int row = 0; row < Model.RowHints.Count; row++)
+            {
+                <div class="row-hint-row d-flex justify-content-end">
+                    @for (int e = 0; e < Model.MaxRowHintsCount - Model.RowHints[row].Count; e++)
+                    {
+                        <div class="hint-cell empty"></div>
+                    }
+
+                    @for (int j = 0; j < Model.RowHints[row].Count; j++)
+                    {
+                        <div class="hint-cell">
+                            @Model.RowHints[row][j]
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="nonogram-grid" data-id="@Model.Id" data-solution="@Model.SolutionJson" style="grid-template-columns: repeat(@Model.Width, 24px);">
+            @for (var row = 0; row < Model.Height; row++)
+            {
+                for (var col = 0; col < Model.Width; col++)
+                {
+                    <div class="cell" data-row="@row" data-col="@col"></div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<script src="~/js/game.js"></script>
+
