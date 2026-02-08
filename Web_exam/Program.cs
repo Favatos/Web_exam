@@ -26,7 +26,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Nonogram}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

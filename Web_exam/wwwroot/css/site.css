@@ -18,7 +18,12 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin: 0;
+    height: 100%;
+    min-height: 100vh;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -35,7 +40,10 @@ body {
     flex-direction: column;
     gap: 8px;
     align-items: center;
+    margin: 0 auto;
+    width: fit-content;
 }
+
 
 .nonogram-top {
     display: flex;
@@ -90,10 +98,26 @@ body {
     gap: 2px;
 }
 
+.nonogram-editor {
+    display: grid;
+    gap: 2px;
+    justify-content: center;
+    align-content: center;
+}
+
+.nonogram-editor-wrapper {
+    min-width: 200px;
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .cell {
     background-color: #f8f8f8;
     cursor: pointer;
     border-radius: 3px;
+    transition: background-color 0.1s ease;
 }
 
 .black {
@@ -121,5 +145,12 @@ body {
         background-color: #ff5c5c; 
     }
 }
+
+.row-hint-row.hint-done .hint-cell,
+.col-hint-column.hint-done .hint-cell {
+    color: #aaaaaa;
+}
+
+
 
 

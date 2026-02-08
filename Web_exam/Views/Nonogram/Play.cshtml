@@ -1,4 +1,4 @@
-﻿@model Nonogram
+﻿@model Nonogram;
 
 @{
     var cellSize = 24;
@@ -14,7 +14,7 @@
         <div class="col-hints-grid d-flex">
             @for (int col = 0; col < Model.ColHints.Count; col++)
             {
-                <div class="col-hint-column d-flex flex-column justify-content-end">
+                <div class="col-hint-column d-flex flex-column justify-content-end" data-col="@col">
                     @for (int e = 0; e < Model.MaxColHintsCount - Model.ColHints[col].Count; e++)
                     {
                         <div class="hint-cell empty"></div>
@@ -35,7 +35,7 @@
         <div class="row-hints-grid d-flex flex-column">
             @for (int row = 0; row < Model.RowHints.Count; row++)
             {
-                <div class="row-hint-row d-flex justify-content-end">
+                <div class="row-hint-row d-flex justify-content-end" data-row="@row">
                     @for (int e = 0; e < Model.MaxRowHintsCount - Model.RowHints[row].Count; e++)
                     {
                         <div class="hint-cell empty"></div>

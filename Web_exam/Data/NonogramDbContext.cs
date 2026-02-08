@@ -24,7 +24,7 @@ public class NonogramDbContext: DbContext
             {
                 Id = 1,
                 Name = "Harry Potter",
-                Difficulty = "Medium",
+                Difficulty = "Hard",
                 SolutionJson = JsonSerializer.Serialize(new int[][]
                 {
                 [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],

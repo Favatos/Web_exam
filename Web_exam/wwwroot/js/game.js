@@ -17,40 +17,32 @@ var GameSession = /** @class */ (function () {
         }
         return grid;
     };
-    GameSession.prototype.handleLeftClick = function (cell) {
-        var row = +cell.dataset.row;
-        var col = +cell.dataset.col;
-        var current = this.currentGrid[+cell.dataset.row][col];
+    GameSession.prototype.handleLeftClick = function (row, col) {
+        var current = this.currentGrid[row][col];
         var right = this.solutionGrid[row][col];
         if (right === 1) {
             if (current === 1) {
                 return;
             }
             this.currentGrid[row][col] = 1;
-            GameSession.changeCell(cell, 1);
             return;
         }
         this.checkLives();
         this.currentGrid[row][col] = 2;
-        GameSession.animateError(cell, 2);
     };
-    GameSession.prototype.handleRightClick = function (cell) {
-        var row = +cell.dataset.row;
-        var col = +cell.dataset.col;
+    GameSession.prototype.handleRightClick = function (row, col) {
         var current = this.currentGrid[row][col];
         var right = this.solutionGrid[row][col];
         if (right === 0) {
             if (current === 2)
                 return;
             this.currentGrid[row][col] = 2;
-            GameSession.changeCell(cell, 2);
             return;
         }
         if (current === 1)
             return;
         this.checkLives();
         this.currentGrid[row][col] = 0;
-        GameSession.animateError(cell, 1);
     };
     GameSession.prototype.checkLives = function () {
         if (this.lives === -1)
@@ -60,7 +52,120 @@ var GameSession = /** @class */ (function () {
             this.status = "Lost";
         }
     };
-    GameSession.changeCell = function (cell, num) {
+    GameSession.prototype.isRowSolved = function (row) {
+        for (var col = 0; col < this.solutionGrid[row].length; col++) {
+            var right = this.solutionGrid[row][col];
+            var current = this.currentGrid[row][col];
+            if (right === 1 && current !== 1) {
+                return false;
+            }
+            if (right === 0 && current === 1) {
+                return false;
+            }
+        }
+        console.log("right");
+        return true;
+    };
+    GameSession.prototype.isColSolved = function (col) {
+        for (var row = 0; row < this.solutionGrid.length; row++) {
+            var right = this.solutionGrid[row][col];
+            var current = this.currentGrid[row][col];
+            if (right === 1 && current !== 1) {
+                return false;
+            }
+            if (right === 0 && current === 1) {
+                return false;
+            }
+        }
+        console.log("right");
+        return true;
+    };
+    return GameSession;
+}());
+var GameView = /** @class */ (function () {
+    function GameView(session) {
+        this.session = session;
+    }
+    GameView.prototype.handleLeftClick = function (cell) {
+        var row = +cell.dataset.row;
+        var col = +cell.dataset.col;
+        this.session.handleLeftClick(row, col);
+        var right = this.session.solutionGrid[row][col];
+        var current = this.session.currentGrid[row][col];
+        if (right === 1 && current === 1) {
+            GameView.changeCell(cell, 1);
+        }
+        else if (right === 0 && current === 2) {
+            GameView.animateError(cell, 2);
+        }
+    };
+    GameView.prototype.handleRightClick = function (cell) {
+        var row = +cell.dataset.row;
+        var col = +cell.dataset.col;
+        var before = this.session.currentGrid[row][col];
+        var right = this.session.solutionGrid[row][col];
+        this.session.handleRightClick(row, col);
+        var current = this.session.currentGrid[row][col];
+        if (right === 0 && current === 2) {
+            GameView.changeCell(cell, 2);
+            return;
+        }
+        if (before === 1 && current === 1) {
+            return;
+        }
+        if (right === 1 && current === 0) {
+            GameView.animateError(cell, 1);
+        }
+    };
+    GameView.prototype.updateRowHintView = function (row) {
+        var rowHint = document.querySelector(".row-hint-row[data-row=\"".concat(row, "\"]"));
+        if (!rowHint)
+            return;
+        if (this.session.isRowSolved(row)) {
+            rowHint.classList.add("hint-done");
+            this.changeGridRowToCross(row);
+        }
+        else {
+            rowHint.classList.remove("hint-done");
+        }
+    };
+    GameView.prototype.updateColHintView = function (col) {
+        var colHint = document.querySelector(".col-hint-column[data-col=\"".concat(col, "\"]"));
+        if (!colHint) {
+            console.warn("colHint not found for col", col);
+            return;
+        }
+        if (this.session.isColSolved(col)) {
+            colHint.classList.add("hint-done");
+            this.changeGridColToCross(col);
+        }
+        else {
+            colHint.classList.remove("hint-done");
+        }
+    };
+    GameView.prototype.changeGridRowToCross = function (row) {
+        for (var col = 0; col < this.session.solutionGrid[row].length; col++) {
+            if (this.session.currentGrid[row][col] == 0) {
+                this.session.currentGrid[row][col] = 2;
+                var cell = document.querySelector(".cell[data-row=\"".concat(row, "\"][data-col=\"").concat(col, "\"]"));
+                if (cell) {
+                    GameView.changeCell(cell, 2);
+                }
+            }
+        }
+    };
+    GameView.prototype.changeGridColToCross = function (col) {
+        for (var row = 0; row < this.session.solutionGrid.length; row++) {
+            if (this.session.currentGrid[row][col] == 0) {
+                this.session.currentGrid[row][col] = 2;
+                var cell = document.querySelector(".cell[data-row=\"".concat(row, "\"][data-col=\"").concat(col, "\"]"));
+                if (cell) {
+                    GameView.changeCell(cell, 2);
+                }
+            }
+        }
+    };
+    GameView.changeCell = function (cell, num) {
         cell.classList.remove("black", "cross");
         switch (num) {
             case 0:
@@ -75,17 +180,17 @@ var GameSession = /** @class */ (function () {
                 return;
         }
     };
-    GameSession.animateError = function (cell, finalNum) {
+    GameView.animateError = function (cell, finalNum) {
         cell.classList.remove("black", "cross");
         cell.classList.add("error-blink");
         var onAnimationEnd = function () {
             cell.classList.remove("error-blink");
-            GameSession.changeCell(cell, finalNum);
+            GameView.changeCell(cell, finalNum);
             cell.removeEventListener("animationend", onAnimationEnd);
         };
         cell.addEventListener("animationend", onAnimationEnd);
     };
-    return GameSession;
+    return GameView;
 }());
 console.log("working");
 var grid = document.querySelector(".nonogram-grid");
@@ -93,13 +198,20 @@ grid.addEventListener("contextmenu", function (event) {
     event.preventDefault();
 });
 var session = new GameSession(+grid.dataset.id, 10, JSON.parse(grid.dataset.solution));
+var view = new GameView(session);
 var cells = document.querySelectorAll(".cell");
 cells.forEach(function (c) {
     c.addEventListener("mousedown", function (event) {
-        if (event.button == 0)
-            session.handleLeftClick(c);
-        if (event.button == 2)
-            session.handleRightClick(c);
+        var row = +c.dataset.row;
+        var col = +c.dataset.col;
+        if (event.button === 0) {
+            view.handleLeftClick(c);
+        }
+        else if (event.button === 2) {
+            view.handleRightClick(c);
+        }
+        view.updateRowHintView(row);
+        view.updateColHintView(col);
         console.log(c.dataset.row, c.dataset.col);
     });
 });

@@ -1,0 +1,43 @@
+﻿@using Web_exam.ViewModels
+@model LevelsVm;
+@{
+    ViewData["Title"] = "Levels";
+}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Levels</h1>
+    </div>
+
+    @foreach (var group in Model.LevelGroups)
+    {
+        <section class="mb-4">
+            <div class="d-flex justify-content-between align-items-baseline mb-2">
+                <h2 class="h5 mb-0">@group.Title</h2>
+            </div>
+
+            <div class="row g-2">
+                @foreach (var level in group.Levels)
+                {
+                    <div class="col-4 col-sm-3 col-md-2 col-lg-1">
+                        <a asp-controller="Nonogram"
+                           asp-action="Play"
+                           asp-route-id="@level.Id"
+                           class="btn btn-outline-primary w-100">
+                            @level
+                        </a>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+
+    <div class="mt-4">
+        <a asp-controller="Nonogram"
+           asp-action="Create"
+           class="btn btn-primary">
+            Create nonogram
+        </a>
+    </div>
+</div>

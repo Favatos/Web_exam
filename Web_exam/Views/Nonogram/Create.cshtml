@@ -1,0 +1,77 @@
+﻿@using Web_exam.ViewModels
+@model CreateVm;
+@{
+    ViewData["Title"] = "Nonogram maker";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="h3 mb-3 text-center">Nonogram maker</h1>
+            <p class="text-muted text-center mb-4">
+                Set the size of the grid and the name of the puzzle, then draw the solution in the editor below..
+            </p>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" placeholder="For example, cat int the box" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-6 col-md-4">
+                                <label class="form-label" for="Width">Width (columns)</label>
+                                <input type="number" class="form-control" id="Width" name="Width" min="1" max="30" value="5" />
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <label class="form-label" for="Height">Height (rows)</label>
+                                <input type="number" class="form-control" id="Height"  name="Height" min="1" max="30" value="5" />
+                            </div>
+
+                            <div class="col-12 col-md-4 d-flex flex-column justify-content-end">
+                                <label class="form-label mb-1">Difficulty</label>
+                                <div id="DifficultyDisplay" class="form-control-plaintext">
+                                    It will be calculated according to the size
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" asp-for="GridJson" id="GridJson" />
+
+                        <div class="d-flex justify-content-end mt-2">
+                            <a asp-action="Index" class="btn btn-outline-secondary me-2">
+                                Cansel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Save nonogram
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 mb-3 text-center">Nonogram grid</h2>
+                    <div class="d-flex justify-content-center">
+                        <div class="nonogram-editor-wrapper border rounded">
+                            <div id="nonogram-editor" class="nonogram-editor">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/editor.js"></script>

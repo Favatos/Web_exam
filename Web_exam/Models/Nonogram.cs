@@ -91,5 +91,10 @@ public class Nonogram
 
         return colHints;
     }
+
+    public override string ToString()
+    {
+        return Name;
+    }
 }
 
