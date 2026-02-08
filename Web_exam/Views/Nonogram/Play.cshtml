@@ -5,10 +5,20 @@
     var gap = 2;
     var rowHintWidth = Model.MaxRowHintsCount * cellSize + (Model.MaxRowHintsCount - 1) * gap;
     var colHintHeight = Model.MaxColHintsCount * cellSize + (Model.MaxColHintsCount - 1) * gap;
+    var gridWidth = Model.Width * cellSize + (Model.Width - 1) * gap;
 }
 
 <div class="nonogram-wrapper">
-    <div class="nonogram-top d-flex">
+    <div class="lives-wrapper d-flex justify-content-between"
+         @* style="margin-left:@(rowHintWidth)px; width:@(gridWidth)px; text-align:center;"*@>
+        <a asp-action="Index" class="btn btn-outline-secondary me-2">
+            ← All nonograms
+        </a>
+        <span id="LivesDisplay"></span>
+        <div style="width: 15%;"></div>
+    </div>
+
+    <div class="nonogram-top d-flex" style="margin-right:@(rowHintWidth)px;">
         <div class="nonogram-corner" style="width:@(rowHintWidth)px; height:@(colHintHeight)px;"></div>
 
         <div class="col-hints-grid d-flex">
@@ -31,7 +41,7 @@
         </div>
     </div>
 
-    <div class="nonogram-middle d-flex">
+    <div class="nonogram-middle d-flex" style="margin-right:@(rowHintWidth)px;">
         <div class="row-hints-grid d-flex flex-column">
             @for (int row = 0; row < Model.RowHints.Count; row++)
             {
@@ -51,7 +61,7 @@
             }
         </div>
 
-        <div class="nonogram-grid" data-id="@Model.Id" data-solution="@Model.SolutionJson" style="grid-template-columns: repeat(@Model.Width, 24px);">
+        <div class="nonogram-grid" data-id="@Model.Id" data-solution="@Model.SolutionJson" data-difficulty="@Model.Difficulty" style="grid-template-columns: repeat(@Model.Width, 24px);">
             @for (var row = 0; row < Model.Height; row++)
             {
                 for (var col = 0; col < Model.Width; col++)
@@ -62,6 +72,27 @@
         </div>
     </div>
 </div>
+
+<div id="game-over-modal" class="game-modal d-none">
+    <div class="game-modal-content">
+        <h3 class="mb-2">You`ve lost 💀</h3>
+        <p class="mb-3">Жизни закончились.</p>
+        <button id="game-over-restart" class="btn btn-primary btn-sm">
+            Сыграть ещё раз
+        </button>
+    </div>
+</div>
+
+<div id="game-win-modal" class="game-modal d-none">
+    <div class="game-modal-content">
+        <h3 class="mb-2">You won</h3>
+        <p class="mb-3">Сongratulations!</p>
+        <a asp-action="Index" class="btn btn-primary me-2">
+            ← All nonograms
+        </a>
+    </div>
+</div>
+
 
 <script src="~/js/game.js"></script>
 

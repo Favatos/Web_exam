@@ -52,6 +52,17 @@ var GameSession = /** @class */ (function () {
             this.status = "Lost";
         }
     };
+    GameSession.prototype.checkWin = function () {
+        for (var row = 0; row < this.solutionGrid.length; row++) {
+            if (!this.isRowSolved(row)) {
+                console.log("not win");
+                return false;
+            }
+        }
+        this.status = "Win";
+        console.log("win");
+        return true;
+    };
     GameSession.prototype.isRowSolved = function (row) {
         for (var col = 0; col < this.solutionGrid[row].length; col++) {
             var right = this.solutionGrid[row][col];
@@ -98,6 +109,8 @@ var GameView = /** @class */ (function () {
         else if (right === 0 && current === 2) {
             GameView.animateError(cell, 2);
         }
+        this.session.checkWin();
+        this.renderLives();
     };
     GameView.prototype.handleRightClick = function (cell) {
         var row = +cell.dataset.row;
@@ -116,6 +129,8 @@ var GameView = /** @class */ (function () {
         if (right === 1 && current === 0) {
             GameView.animateError(cell, 1);
         }
+        this.session.checkWin();
+        this.renderLives();
     };
     GameView.prototype.updateRowHintView = function (row) {
         var rowHint = document.querySelector(".row-hint-row[data-row=\"".concat(row, "\"]"));
@@ -190,15 +205,56 @@ var GameView = /** @class */ (function () {
         };
         cell.addEventListener("animationend", onAnimationEnd);
     };
+    GameView.prototype.showGameOver = function () {
+        var modal = document.getElementById("game-over-modal");
+        if (!modal)
+            return;
+        modal.classList.remove("d-none");
+        var grid = document.querySelector(".nonogram-grid");
+        if (grid) {
+            grid.style.pointerEvents = "none";
+        }
+        var restartBtn = document.getElementById("game-over-restart");
+        if (restartBtn) {
+            restartBtn.addEventListener("click", function () {
+                location.reload();
+            });
+        }
+    };
+    GameView.prototype.showGameWin = function () {
+        var modal = document.getElementById("game-win-modal");
+        if (!modal)
+            return;
+        modal.classList.remove("d-none");
+        var grid = document.querySelector(".nonogram-grid");
+        if (grid) {
+            grid.style.pointerEvents = "none";
+        }
+    };
+    GameView.prototype.renderLives = function () {
+        var el = document.getElementById("LivesDisplay");
+        if (el) {
+            el.textContent = "Lives: ".concat(this.session.lives);
+        }
+        if (this.session.status === "Lost") {
+            this.showGameOver();
+        }
+        if (this.session.status === "Win") {
+            this.showGameWin();
+        }
+    };
     return GameView;
 }());
 console.log("working");
 var grid = document.querySelector(".nonogram-grid");
+var difficulty = grid.dataset.difficulty;
+var lives = difficulty.toLowerCase() == "easy" ? 5 : difficulty.toLowerCase() == "medium" ? 10 : 15;
 grid.addEventListener("contextmenu", function (event) {
     event.preventDefault();
 });
-var session = new GameSession(+grid.dataset.id, 10, JSON.parse(grid.dataset.solution));
+var session = new GameSession(+grid.dataset.id, lives, JSON.parse(grid.dataset.solution));
 var view = new GameView(session);
+view.renderLives();
 var cells = document.querySelectorAll(".cell");
 cells.forEach(function (c) {
     c.addEventListener("mousedown", function (event) {

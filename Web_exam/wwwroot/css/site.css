@@ -13,18 +13,23 @@ html {
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
     margin: 0;
-    height: 100%;
-    min-height: 100vh;
-    display:flex;
+    height: 60%;
+    min-width: 100vw;
+    display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
+
+
+main {
+    flex: 1; 
+}
+
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
@@ -150,6 +155,30 @@ body {
 .col-hint-column.hint-done .hint-cell {
     color: #aaaaaa;
 }
+
+.game-modal {
+    position: fixed;
+    inset: 0; 
+    background: rgba(0, 0, 0, .4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+.game-modal-content {
+    background: #fff;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    text-align: center;
+    min-width: 260px;
+}
+
+.lives-wrapper{
+    min-width: 80vw;
+}
+
 
 
 

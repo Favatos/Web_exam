@@ -71,6 +71,20 @@ class GameSession {
         }
     }
 
+    checkWin(): boolean {
+        for (let row = 0; row < this.solutionGrid.length; row++) {
+            if (!this.isRowSolved(row)) {
+                console.log("not win");
+                return false;
+            }
+        }
+
+        this.status = "Win";
+        console.log("win");
+        return true;
+    }
+
+
     isRowSolved(row: number): boolean {
         for (let col = 0; col < this.solutionGrid[row].length; col++) {
             const right = this.solutionGrid[row][col];
@@ -119,15 +133,18 @@ class GameView {
         const col: number = +cell.dataset.col!;
 
         this.session.handleLeftClick(row, col);
-
+        
         const right = this.session.solutionGrid[row][col];
         const current = this.session.currentGrid[row][col];
-
+        
         if (right === 1 && current === 1) {
             GameView.changeCell(cell, 1);
         } else if (right === 0 && current === 2) {
             GameView.animateError(cell, 2);
         }
+
+        this.session.checkWin();
+        this.renderLives();
     }
 
     handleRightClick(cell: HTMLElement): void {
@@ -153,6 +170,9 @@ class GameView {
         if (right === 1 && current === 0) {
             GameView.animateError(cell, 1);
         }
+
+        this.session.checkWin();
+        this.renderLives();
     }
 
 
@@ -244,12 +264,57 @@ class GameView {
 
         cell.addEventListener("animationend", onAnimationEnd);
     }
+
+    private showGameOver(): void {
+        const modal = document.getElementById("game-over-modal");
+        if (!modal) return;
+
+        modal.classList.remove("d-none");
+        const grid = document.querySelector(".nonogram-grid") as HTMLElement;
+        if (grid) {
+            grid.style.pointerEvents = "none";
+        }
+
+        const restartBtn = document.getElementById("game-over-restart");
+        if (restartBtn) {
+            restartBtn.addEventListener("click", () => {
+                location.reload();
+            });
+        }
+    }
+
+    private showGameWin(): void {
+        const modal = document.getElementById("game-win-modal");
+        if (!modal) return;
+
+        modal.classList.remove("d-none");
+        const grid = document.querySelector(".nonogram-grid") as HTMLElement;
+        if (grid) {
+            grid.style.pointerEvents = "none";
+        }
+    }
+
+    renderLives() {
+        const el = document.getElementById("LivesDisplay");
+        if (el) {
+            el.textContent = `Lives: ${this.session.lives}`;
+        }
+
+        if (this.session.status === "Lost") {
+            this.showGameOver();
+        }
+        if(this.session.status === "Win"){
+            this.showGameWin();
+        }
+    }
 }
 
 
 console.log("working");
 
 let grid: HTMLElement = document.querySelector(".nonogram-grid")!;
+let difficulty = grid.dataset.difficulty;
+let lives = difficulty!.toLowerCase() == "easy" ? 5 : difficulty!.toLowerCase() == "medium" ? 10 : 15;
 
 grid.addEventListener("contextmenu", (event) => {
     event.preventDefault();
@@ -257,11 +322,12 @@ grid.addEventListener("contextmenu", (event) => {
 
 let session = new GameSession(
     +grid.dataset.id!,
-    10,
+    lives,
     JSON.parse(grid.dataset.solution!)
 );
 
 let view = new GameView(session);
+view.renderLives();
 
 let cells: NodeListOf<HTMLElement> = document.querySelectorAll(".cell");
 
