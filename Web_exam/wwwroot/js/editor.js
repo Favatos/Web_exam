@@ -24,6 +24,7 @@ var Editor = /** @class */ (function () {
 }());
 var EditorView = /** @class */ (function () {
     function EditorView(editor) {
+        this.isDrawing = false;
         this.editor = editor;
         this.gridJsonInput = document.getElementById("GridJson");
         this.container = document.getElementById("nonogram-editor");
@@ -45,12 +46,19 @@ var EditorView = /** @class */ (function () {
         var _this = this;
         var cells = this.container.querySelectorAll(".cell");
         cells.forEach(function (c) {
-            c.addEventListener("click", function () {
-                var row = +c.dataset.row;
-                var col = +c.dataset.col;
-                _this.editor.solutionGrid[row][col] = _this.editor.solutionGrid[row][col] === 1 ? 0 : 1;
-                c.classList.toggle("black");
-                _this.updateGridJson();
+            c.addEventListener("mousedown", function (event) {
+                if (event.button != 0)
+                    return;
+                _this.isDrawing = true;
+                _this.paintCell(c);
+            });
+            c.addEventListener("mouseenter", function (event) {
+                if (!_this.isDrawing)
+                    return;
+                _this.paintCell(c);
+            });
+            c.addEventListener("mouseup", function () {
+                _this.isDrawing = false;
             });
         });
     };
@@ -58,6 +66,13 @@ var EditorView = /** @class */ (function () {
         if (!this.gridJsonInput)
             return;
         this.gridJsonInput.value = JSON.stringify(this.editor.solutionGrid);
+    };
+    EditorView.prototype.paintCell = function (c) {
+        var row = +c.dataset.row;
+        var col = +c.dataset.col;
+        this.editor.solutionGrid[row][col] = this.editor.solutionGrid[row][col] === 1 ? 0 : 1;
+        c.classList.toggle("black");
+        this.updateGridJson();
     };
     return EditorView;
 }());

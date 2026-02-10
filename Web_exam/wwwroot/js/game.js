@@ -146,10 +146,8 @@ var GameView = /** @class */ (function () {
     };
     GameView.prototype.updateColHintView = function (col) {
         var colHint = document.querySelector(".col-hint-column[data-col=\"".concat(col, "\"]"));
-        if (!colHint) {
-            console.warn("colHint not found for col", col);
+        if (!colHint)
             return;
-        }
         if (this.session.isColSolved(col)) {
             colHint.classList.add("hint-done");
             this.changeGridColToCross(col);
@@ -230,6 +228,12 @@ var GameView = /** @class */ (function () {
         if (grid) {
             grid.style.pointerEvents = "none";
         }
+        var closeBtn = document.getElementById("game-win-close");
+        if (!closeBtn)
+            return;
+        closeBtn.addEventListener("click", function () {
+            modal.classList.add("d-none");
+        });
     };
     GameView.prototype.renderLives = function () {
         var el = document.getElementById("LivesDisplay");

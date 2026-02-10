@@ -35,6 +35,7 @@ class Editor{
 
 class EditorView{
     private editor : Editor;
+    private isDrawing : boolean = false;
     gridJsonInput :  HTMLInputElement;
     container : HTMLElement;
 
@@ -65,13 +66,21 @@ class EditorView{
         let cells: NodeListOf<HTMLElement> = this.container.querySelectorAll(".cell");
 
         cells.forEach(c => {
-            c.addEventListener("click", () => {
-                const row: number = +c.dataset.row!;
-                const col: number = +c.dataset.col!;
-                this.editor.solutionGrid[row][col] = this.editor.solutionGrid[row][col] === 1 ? 0 : 1;
+            c.addEventListener("mousedown", (event) => {
+                if(event.button != 0) return;
 
-                c.classList.toggle("black");
-                this.updateGridJson();
+                this.isDrawing = true;
+                this.paintCell(c);
+            })
+
+            c.addEventListener("mouseenter", (event) => {
+                if (!this.isDrawing) return;
+
+                this.paintCell(c);
+            })
+
+            c.addEventListener("mouseup", () => {
+                this.isDrawing = false;
             })
         });
     }
@@ -81,6 +90,14 @@ class EditorView{
         this.gridJsonInput.value = JSON.stringify(this.editor.solutionGrid);
     }
 
+    paintCell(c : HTMLElement) {
+        const row: number = +c.dataset.row!;
+        const col: number = +c.dataset.col!;
+        this.editor.solutionGrid[row][col] = this.editor.solutionGrid[row][col] === 1 ? 0 : 1;
+
+        c.classList.toggle("black");
+        this.updateGridJson();
+    }
 }
 
 let width = 0;

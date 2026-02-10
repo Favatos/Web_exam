@@ -15,19 +15,30 @@ html {
 html {
     position: relative;
     min-height: 100%;
+    background-color: #E6E8F5;
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }
 
 body {
     margin: 0;
-    height: 60%;
     min-width: 100vw;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #E6E8F5;
+    color: #490092;
 }
 
 
 main {
-    flex: 1; 
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 90%;
 }
 
 
@@ -40,6 +51,15 @@ main {
   text-align: start;
 }
 
+.play-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    justify-self: center;
+    width: 100%;
+    height: 90%;
+}
+
 .nonogram-wrapper {
     display: flex;
     flex-direction: column;
@@ -47,6 +67,9 @@ main {
     align-items: center;
     margin: 0 auto;
     width: fit-content;
+
+    align-self:center;
+    justify-self: center;
 }
 
 
@@ -88,10 +111,11 @@ main {
 .cell {
     width: 24px;
     height: 24px;
-    border: 1px solid #ccc;
+    border: 1px solid #BFAEDC;
+    border-radius: 3px;
     font-size: 12px;
     text-align: center;
-    line-height: 24px; 
+    line-height: 24px;
 }
 
 .hint-cell.empty {
@@ -126,12 +150,12 @@ main {
 }
 
 .black {
-    background-color: black;
+    background-color: #490092;
     border: 1px solid #BDBDBD;
 }
 
 .cross {
-    background-image: url("../images/close.png");
+    background-image: url('../images/close (2).png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -153,7 +177,7 @@ main {
 
 .row-hint-row.hint-done .hint-cell,
 .col-hint-column.hint-done .hint-cell {
-    color: #aaaaaa;
+    color: #BFAEDC;
 }
 
 .game-modal {
@@ -180,6 +204,27 @@ main {
 }
 
 
+.level-card {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.2;
+    border: 1px solid #703AAB;
+    color: #490092;
+}
+
+.btn:hover {
+    background-color: #703AAB;
+    border: 1px solid #703AAB;
+}
+
+.btn-primary {
+    background-color: #9874C4;
+    border: 1px solid #9874C4;
+}
 
 
 

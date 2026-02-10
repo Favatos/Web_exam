@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using Web_exam.Data;
 using Web_exam.Models;
 using Web_exam.ViewModels;
@@ -20,7 +19,7 @@ public class NonogramController : Controller
     {
         Nonogram? nonogram = await db.Nonograms.FindAsync(id);
 
-        if (nonogram == null) return View("There is no nonograms... Yet.");
+        if (nonogram == null) return View("There is no such nonogram... Yet.");
 
         return View(nonogram);
     }
@@ -30,14 +29,23 @@ public class NonogramController : Controller
         List<Nonogram> nonograms = await db.Nonograms.ToListAsync();
         if (!nonograms.Any()) return NotFound("Nonograms not found");
 
-        LevelGroup easy = new() { Title = "Easy" };
-        easy.Levels = [.. nonograms.Where(n => n.Difficulty.ToLower() == "easy")];
+        LevelGroup easy = new()
+        {
+            Title = "Easy",
+            Levels = [.. nonograms.Where(n => n.Difficulty.ToLower() == "easy")]
+        };
 
-        LevelGroup mediun = new() { Title = "Medium" };
-        mediun.Levels = [.. nonograms.Where(n => n.Difficulty.ToLower() == "medium")];
+        LevelGroup mediun = new()
+        {
+            Title = "Medium",
+            Levels = [.. nonograms.Where(n => n.Difficulty.ToLower() == "medium")]
+        };
 
-        LevelGroup hard = new() { Title = "Hard" };
-        hard.Levels = [.. nonograms.Where(n => n.Difficulty.ToLower() == "hard")];
+        LevelGroup hard = new()
+        {
+            Title = "Hard",
+            Levels = [.. nonograms.Where(n => n.Difficulty.ToLower() == "hard")]
+        };
 
         LevelsVm vm = new();
         vm.LevelGroups.Add(easy);
@@ -53,6 +61,11 @@ public class NonogramController : Controller
     public async Task<IActionResult> Create(CreateVm vm)
     {
         if (!ModelState.IsValid) return View(vm);
+        if (!vm.GridJson.Contains('1'))
+        {
+            ModelState.AddModelError(string.Empty, "Grid is empty");
+            return View(vm);
+        }
 
         string difficulty = "";
         int maxSide = Math.Max(vm.Width, vm.Height);

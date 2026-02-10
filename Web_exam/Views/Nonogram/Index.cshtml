@@ -10,6 +10,14 @@
         <h1 class="h3 mb-0">Levels</h1>
     </div>
 
+    <div class="mt-4 mb-4">
+        <a asp-controller="Nonogram"
+           asp-action="Create"
+           class="btn btn-primary">
+            Create nonogram
+        </a>
+    </div>
+
     @foreach (var group in Model.LevelGroups)
     {
         <section class="mb-4">
@@ -24,7 +32,7 @@
                         <a asp-controller="Nonogram"
                            asp-action="Play"
                            asp-route-id="@level.Id"
-                           class="btn btn-outline-primary w-100">
+                           class="btn btn-outline-primary w-100 level-card">
                             @level
                         </a>
                     </div>
@@ -32,12 +40,4 @@
             </div>
         </section>
     }
-
-    <div class="mt-4">
-        <a asp-controller="Nonogram"
-           asp-action="Create"
-           class="btn btn-primary">
-            Create nonogram
-        </a>
-    </div>
 </div>

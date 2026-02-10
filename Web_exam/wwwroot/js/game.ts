@@ -190,11 +190,8 @@ class GameView {
 
     updateColHintView(col : number) : void {
         const colHint = document.querySelector<HTMLElement>(`.col-hint-column[data-col="${col}"]`);
-        if (!colHint){ 
-            console.warn("colHint not found for col", col);
-            return;
-        }
-
+        if (!colHint) return;
+   
         if (this.session.isColSolved(col)) {
             colHint.classList.add("hint-done");
             this.changeGridColToCross(col);
@@ -292,6 +289,13 @@ class GameView {
         if (grid) {
             grid.style.pointerEvents = "none";
         }
+
+        const closeBtn = document.getElementById("game-win-close");
+        if(!closeBtn) return;
+
+        closeBtn.addEventListener("click", () => {
+            modal.classList.add("d-none");
+        })
     }
 
     renderLives() {
