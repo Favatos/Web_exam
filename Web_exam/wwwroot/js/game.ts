@@ -31,15 +31,13 @@ class GameSession {
         const current = this.currentGrid[row][col];
         const right = this.solutionGrid[row][col];
 
-        if (right === 1) {
-            if (current === 1) {
-                return;
+       if (right === 1) {
+            if (current !== 1) {
+                this.currentGrid[row][col] = 1;
             }
-
-            this.currentGrid[row][col] = 1;
             return;
         }
-
+        
         this.checkLives();
         this.currentGrid[row][col] = 2;
     }
@@ -49,9 +47,9 @@ class GameSession {
         const right = this.solutionGrid[row][col];
 
         if (right === 0) {
-            if (current === 2) return;
-
-            this.currentGrid[row][col] = 2;
+            if (current !== 2) {
+                this.currentGrid[row][col] = 2;
+            }
             return;
         }
 

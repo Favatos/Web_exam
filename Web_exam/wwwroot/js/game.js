@@ -21,10 +21,9 @@ var GameSession = /** @class */ (function () {
         var current = this.currentGrid[row][col];
         var right = this.solutionGrid[row][col];
         if (right === 1) {
-            if (current === 1) {
-                return;
+            if (current !== 1) {
+                this.currentGrid[row][col] = 1;
             }
-            this.currentGrid[row][col] = 1;
             return;
         }
         this.checkLives();
@@ -34,9 +33,9 @@ var GameSession = /** @class */ (function () {
         var current = this.currentGrid[row][col];
         var right = this.solutionGrid[row][col];
         if (right === 0) {
-            if (current === 2)
-                return;
-            this.currentGrid[row][col] = 2;
+            if (current !== 2) {
+                this.currentGrid[row][col] = 2;
+            }
             return;
         }
         if (current === 1)

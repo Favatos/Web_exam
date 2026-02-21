@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Web_exam.Data;
 
@@ -10,9 +11,11 @@ using Web_exam.Data;
 namespace Web_exam.Data.Migrations
 {
     [DbContext(typeof(NonogramDbContext))]
-    partial class NonogramDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260221162015_SmallChanges")]
+    partial class SmallChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
